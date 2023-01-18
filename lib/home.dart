@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       drawer: Drawer(),
       body: Stack(
+        fit: StackFit.expand,
         children: [
           VxAnimatedBox()
               .size(context.screenWidth, context.screenHeight)
@@ -48,19 +49,19 @@ class _HomeState extends State<Home> {
             elevation: 0.0,
           ).h(context.screenHeight * 14.5).p(16),
           //
-          Items.isNotEmpty?ListView.builder(
-            itemCount: Items.length,
-            itemBuilder: (context,index){
-              return Card(
-                key: ValueKey(Items[index]["id"]),
-                margin: const EdgeInsets.all(10),
-                color: Colors.amber.shade100,
-                child: SingleChildScrollView(
-                  child: Image.network(Items[index]["image"]),
-                ),
-              );
-            },
-            ):Container()
+          // const SizedBox(height: 100,),
+          VxSwiper.builder(
+              itemCount: Items.length,
+              aspectRatio: 1.0,
+              itemBuilder: (context,index){
+                return VxBox(
+                  child: ZStack([])).bgImage(DecorationImage(
+                    image: NetworkImage(Items[index]["image"]),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3),BlendMode.darken)
+                )).border(color: Colors.black,width: 5.0).withRounded(value: 60.0).make().p12().centered();
+              }
+          )
         ],
       ),
     );
