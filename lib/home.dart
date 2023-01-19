@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:ai_audioplayer/utils/ai_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -35,6 +36,7 @@ class _HomeState extends State<Home> {
       drawer: const Drawer(),
       body: Stack(
         fit: StackFit.expand,
+        clipBehavior: Clip.antiAlias,
         children: [
           VxAnimatedBox()
               .size(context.screenWidth, context.screenHeight)
@@ -49,15 +51,27 @@ class _HomeState extends State<Home> {
             backgroundColor: Colors.transparent,
             elevation: 0.0,
           ).h(context.screenHeight * 14.5).p(16),
-          //
-          // const SizedBox(height: 100,),
           VxSwiper.builder(
               itemCount: Items.length,
               aspectRatio: 1.0,
               itemBuilder: (context, index) {
-                final rad = Items[index];
                 return VxBox(
                         child: ZStack([
+                  Positioned(
+                    top: 0.0,
+                    right: 0.0,
+                    child: VxBox(
+                            child: Text(Items[index]["category"])
+                                .text
+                                .white
+                                .make()
+                                .px16())
+                        .height(40)
+                        .black
+                        .alignCenter
+                        .withRounded(value: 10)
+                        .make(),
+                  ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: VStack(
@@ -71,8 +85,20 @@ class _HomeState extends State<Home> {
                       ],
                       crossAlignment: CrossAxisAlignment.center,
                     ),
-                  )
+                  ),
+                  Align(
+                      alignment: Alignment.center,
+                      child: VStack(
+                        [
+                          const Icon(CupertinoIcons.play_circle,
+                              color: Colors.white),
+                          10.heightBox,
+                          "Double Tap to Play".text.gray300.make(),
+                        ],
+                        crossAlignment: CrossAxisAlignment.center,
+                      )),
                 ]))
+                    .clip(Clip.antiAlias)
                     .bgImage(DecorationImage(
                         image: NetworkImage(Items[index]["image"]),
                         fit: BoxFit.cover,
@@ -81,9 +107,19 @@ class _HomeState extends State<Home> {
                     .border(color: Colors.black, width: 5.0)
                     .withRounded(value: 60.0)
                     .make()
-                    .p12()
-                    .centered();
-              })
+                    .onInkDoubleTap(() {})
+                    .p12();
+              }).centered(),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: Icon(
+              CupertinoIcons.stop_circle,
+              color: Colors.white,
+              size: 50,
+            ),
+          ).pOnly(
+              top: context.percentHeight * 2,
+              bottom: context.percentHeight * 6),
         ],
       ),
     );
