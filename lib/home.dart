@@ -20,10 +20,11 @@ class _HomeState extends State<Home> {
     setState(() {
       Items = data["radios"];
     });
-    print(Items);
+    // print(Items);
   }
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     readJson();
   }
@@ -31,7 +32,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(),
+      drawer: const Drawer(),
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -53,15 +54,36 @@ class _HomeState extends State<Home> {
           VxSwiper.builder(
               itemCount: Items.length,
               aspectRatio: 1.0,
-              itemBuilder: (context,index){
+              itemBuilder: (context, index) {
+                final rad = Items[index];
                 return VxBox(
-                  child: ZStack([])).bgImage(DecorationImage(
-                    image: NetworkImage(Items[index]["image"]),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3),BlendMode.darken)
-                )).border(color: Colors.black,width: 5.0).withRounded(value: 60.0).make().p12().centered();
-              }
-          )
+                        child: ZStack([
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: VStack(
+                      [
+                        Text(Items[index]["name"]).text.white.bold.xl3.make(),
+                        Text(Items[index]["tagline"])
+                            .text
+                            .white
+                            .semiBold
+                            .make(),
+                      ],
+                      crossAlignment: CrossAxisAlignment.center,
+                    ),
+                  )
+                ]))
+                    .bgImage(DecorationImage(
+                        image: NetworkImage(Items[index]["image"]),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(0.3), BlendMode.darken)))
+                    .border(color: Colors.black, width: 5.0)
+                    .withRounded(value: 60.0)
+                    .make()
+                    .p12()
+                    .centered();
+              })
         ],
       ),
     );
